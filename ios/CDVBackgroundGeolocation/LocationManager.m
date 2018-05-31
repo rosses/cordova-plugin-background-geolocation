@@ -312,7 +312,15 @@ enum {
 
 - (void) showLocationSettings
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
+	/* App store rejection...
+
+		Your app uses the "prefs:root=" non-public URL scheme, which is a private
+		entity. The use of non-public APIs is not permitted on the App Store because it
+		can lead to a poor user experience should these APIs change.￼
+
+		So this is now a no-op
+	*/
+    // [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=LOCATION_SERVICES"]];
 }
 
 - (NSMutableDictionary*) getStationaryLocation
