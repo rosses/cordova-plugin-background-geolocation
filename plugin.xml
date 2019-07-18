@@ -3,14 +3,14 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-background-geolocation"
-        version="2.2.9">
+        version="2.2.10">
     <name>CDVBackgroundGeolocation</name>
     <description>Cordova Background Geolocation Plugin</description>
     <license>Apache-2.0</license>
     <keywords>cordova,phonegap,background,geolocation,gps,location</keywords>
 
     <engines>
-        <engine name="cordova" version=">=3.0.0"/>
+        <engine name="cordova" version=">=9.0.0"/>
     </engines>
 
     <js-module src="www/backgroundGeolocation.js" name="backgroundGeolocation">
@@ -21,8 +21,8 @@
     <platform name="android">
     	<preference name="GOOGLE_PLAY_SERVICES_VERSION" default="+"/>
         <preference name="ANDROID_SUPPORT_LIBRARY_VERSION" default="+"/>
-        <preference name="ICON" default="@mipmap/icon" />
-        <preference name="SMALL_ICON" default="@mipmap/icon" />
+        <preference name="ICON" default="@mipmap/ic_launcher" />
+        <preference name="SMALL_ICON" default="@mipmap/ic_launcher" />
         <preference name="ACCOUNT_LABEL" default="@string/app_name" />
         <preference name="ACCOUNT_TYPE" default="$PACKAGE_NAME.account" />
         <preference name="CONTENT_AUTHORITY" default="$PACKAGE_NAME" />
