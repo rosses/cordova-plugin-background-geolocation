@@ -11,6 +11,7 @@ package com.marianhello.bgloc;
 
 import android.accounts.Account;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -32,7 +33,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.marianhello.bgloc.data.BackgroundLocation;
 import com.marianhello.bgloc.data.ConfigurationDAO;
@@ -103,6 +104,8 @@ public class LocationService extends Service {
 
     private static final int ONE_MINUTE = 1000 * 60;
     private static final int FIVE_MINUTES = 1000 * 60 * 5;
+
+    private static final String SERVICE_CHANNEL_ID = "bglocservice";
 
     private LocationDAO dao;
     private Config config;
@@ -178,6 +181,15 @@ public class LocationService extends Service {
                 AuthenticatorService.getAccount(getStringResource(Config.ACCOUNT_TYPE_RESOURCE)));
 
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        // Android 26 - need to register channels
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(SERVICE_CHANNEL_ID, this.getStringResource("app_name"), android.app.NotificationManager.IMPORTANCE_LOW);
+            channel.enableVibration(false);
+            android.app.NotificationManager notificationManager = (android.app.NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
     }
 
     @Override
@@ -236,8 +248,9 @@ public class LocationService extends Service {
         provider = spf.getInstance(config.getLocationProvider());
 
         if (config.getStartForeground()) {
+
             // Build a Notification required for running service in foreground.
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SERVICE_CHANNEL_ID);
             builder.setContentTitle(config.getNotificationTitle());
             builder.setContentText(config.getNotificationText());
             if (config.getSmallNotificationIcon() != null) {
@@ -496,3 +509,5 @@ public class LocationService extends Service {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 }
+
+
