@@ -20,9 +20,15 @@
     NSString* locationModeCallbackId;
     NSMutableArray* stationaryRegionListeners;
     LocationManager* manager;
+    BOOL initialised;
 }
 
 - (void)pluginInitialize
+{
+    initialised = false;
+}
+
+- (void)initialise
 {
     [DDLog addLogger:[DDASLLogger sharedInstance] withLevel:DDLogLevelInfo];
     [DDLog addLogger:[DDTTYLogger sharedInstance] withLevel:DDLogLevelDebug];
@@ -42,6 +48,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPause:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onResume:) name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
+
+    initialised = true;
 }
 
 - (NSString *)loggerDirectory
@@ -60,6 +68,8 @@
  */
 - (void) configure:(CDVInvokedUrlCommand*)command
 {
+    if (!initialised) [self initialise];
+
     [self.commandDelegate runInBackground:^{
         Config* config = [Config fromDictionary:[command.arguments objectAtIndex:0]];
         syncCallbackId = command.callbackId;
